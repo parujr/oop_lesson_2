@@ -1,4 +1,4 @@
-import csv, os
+import csv, os, copy
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -15,6 +15,25 @@ with open(os.path.join(__location__, 'Countries.csv')) as f:
     for r in rows:
         countries.append(dict(r))
 
+players = []
+with open(os.path.join(__location__, 'Players.csv')) as f:
+    rows = csv.DictReader(f)
+    for r in rows:
+        players.append(dict(r))
+
+teams = []
+with open(os.path.join(__location__, 'Teams.csv')) as f:
+    rows = csv.DictReader(f)
+    for r in rows:
+        teams.append(dict(r))
+
+titanic = []
+with open(os.path.join(__location__, 'Titanic.csv')) as f:
+    rows = csv.DictReader(f)
+    for r in rows:
+        titanic.append(dict(r))
+
+
 class DB:
     def __init__(self):
         self.database = []
@@ -27,8 +46,8 @@ class DB:
             if table.table_name == table_name:
                 return table
         return None
-    
-import copy
+
+
 class Table:
     def __init__(self, table_name, table):
         self.table_name = table_name
@@ -44,7 +63,7 @@ class Table:
                     dict1.update(dict2)
                     joined_table.table.append(dict1)
         return joined_table
-    
+
     def filter(self, condition):
         filtered_table = Table(self.table_name + '_filtered', [])
         for item1 in self.table:
@@ -71,13 +90,52 @@ class Table:
     def __str__(self):
         return self.table_name + ':' + str(self.table)
 
+
 table1 = Table('cities', cities)
 table2 = Table('countries', countries)
+table3 = Table("player", players)
+table4 = Table("teams", teams)
+table5 = Table("titanic", titanic)
 my_DB = DB()
 my_DB.insert(table1)
 my_DB.insert(table2)
+my_DB.insert(table3)
+my_DB.insert(table4)
+my_DB.insert(table5)
 my_table1 = my_DB.search('cities')
+my_table3 = my_DB.search("player")
 
+print()
+
+# task 1
+print("Player(s) on a team with “ia” in the team name played less than 200 "
+      "minutes and made more than 100 passes.")
+ia_filtered = table3.filter(lambda x: "ia" in x["team"]).filter(lambda x: float(x["minutes"]) < 200).filter(lambda x: int(x["passes"]) > 100)
+for i in ia_filtered.table:
+    print(f"Name: {i["surname"]}, Team: {i["team"]}, Position: {i["position"]}")
+
+print()
+
+# task 2
+print("The average number of games played for teams ranking below 10 versus "
+      "teams ranking above or equal 10.")
+team_below = table4.filter(lambda x: int(x["ranking"]) < 10)
+team_above_eq = table4.filter(lambda x: int(x["ranking"]) >= 10)
+print(f"Average number of games played for teams ranking below 10: {team_below.aggregate(lambda x: sum(x) / len(x), "games"):.2f}")
+print(f"Average number of games played for teams ranking above or equal 10: {team_above_eq.aggregate(lambda x: sum(x) / len(x), "games"):.2f}")
+
+print()
+
+# task 3
+print("The average number of passes made by forwards versus by midfielders.")
+forward = table3.filter(lambda x: x["position"] == "forward")
+midfielder = table3.filter(lambda x: x["position"] == "midfielder")
+print(f"Average number of passes made by forwards: {forward.aggregate(lambda x: sum(x) / len(x), "passes"):.2f}")
+print(f"Average number of passes made by midfielders: {midfielder.aggregate(lambda x: sum(x) / len(x), "passes"):.2f}")
+
+print()
+
+"""
 print("Test filter: only filtering out cities in Italy") 
 my_table1_filtered = my_table1.filter(lambda x: x['country'] == 'Italy')
 print(my_table1_filtered)
@@ -121,3 +179,4 @@ for item in my_table2.table:
     if len(my_table1_filtered.table) >= 1:
         print(item['country'], my_table1_filtered.aggregate(lambda x: min(x), 'latitude'), my_table1_filtered.aggregate(lambda x: max(x), 'latitude'))
 print()
+"""
