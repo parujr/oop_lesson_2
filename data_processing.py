@@ -104,15 +104,33 @@ class Table:
 
     def pivot_table(self, keys_to_pivot_list, keys_to_aggreagte_list, aggregate_func_list):
         unique_values_list = []
-        key = {"gender": ['M', 'F'], "embarked": ['Southampton', 'Cherbourg', 'Queenstown'], "class": ['3', '2', '1']}
         for i in keys_to_pivot_list:
-            unique_values_list.append(key[i])
+            list_all = self.aggregate(lambda x: x, i)
+            list_key = []
+            for l in list_all:
+                if l not in list_key:
+                    list_key.append(l)
+            unique_values_list.append(list_key)
 
         import combination_gen
         combination = combination_gen.gen_comb_list(unique_values_list)
-        print(combination)
+        biggest_list = []
+        for i in combination:
+            list_condition = self.recursive(keys_to_pivot_list, i)
+            small_list = []
+            for k in range(len(keys_to_aggreagte_list)):
+                small_list_condition = self.aggregate(aggregate_func_list[k], keys_to_aggreagte_list[k])
+                small_list.append(small_list_condition)
+            biggest_list.append([i, small_list])
+        print(biggest_list)
 
-
+    def recursive(self, keys_to_pivot_list, combination_one):
+        if len(combination_one) == 1:
+            list_condition = self.filter(lambda x: x[keys_to_pivot_list[0]] == combination_one[0])
+            return list_condition
+        combination_del = self.recursive(keys_to_pivot_list[0:-1], combination_one[0:-1])
+        list_condition = combination_del.filter(lambda x: x[keys_to_pivot_list[-1]] == combination_one[-1])
+        return list_condition
 
 table1 = Table('cities', cities)
 table2 = Table('countries', countries)
@@ -128,6 +146,9 @@ my_DB.insert(table5)
 my_table1 = my_DB.search('cities')
 my_table3 = my_DB.search("player")
 my_table5 = my_DB.search('titanic')
+
+print()
+my_pivot = my_table5.pivot_table(['embarked', 'gender', 'class'], ['fare', 'fare', 'fare', 'last'], [lambda x: min(x), lambda x: max(x), lambda x: sum(x)/len(x), lambda x: len(x)])
 
 print()
 
