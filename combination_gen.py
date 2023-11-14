@@ -11,40 +11,7 @@ def gen_comb_list(list_set):
         Examples:
             gen_comb_list([[1, 2, 3]]) returns [[1], [2], [3]]
             gen_comb_list([[1, 2, 3], [4, 5]]) returns [[1, 4], [2, 4], [3, 4], [1, 5], [2, 5], [3, 5]]
-            gen_comb_list(
-            [[1, 2, 3], [4, 5], [6, 7, 8]]
-            )
-
-
-            from
-            [[1, 2, 3],
-            [4, 5],
-            [6, 7, 8]]
-
-            returns
-            [1, 4, 6], list_set[0][0], list_set[1][0], list_set[2][0]
-            [2, 4, 6], list_set[0][1], list_set[1][0], list_set[2][0]
-            [3, 4, 6], list_set[0][2], list_set[1][0], list_set[2][0]
-
-            [1, 5, 6], list_set[0][0], list_set[1][1], list_set[2][0]
-            [2, 5, 6], list_set[0][1], list_set[1][1], list_set[2][0]
-            [3, 5, 6], list_set[0][2], list_set[1][1], list_set[2][0]
-
-            [1, 4, 7], list_set[0][0], list_set[1][0], list_set[2][1]
-            [2, 4, 7], list_set[0][1], list_set[1][0], list_set[2][1]
-            [3, 4, 7], list_set[0][2], list_set[1][0], list_set[2][1]
-
-            [1, 5, 7], list_set[0][0], list_set[1][1], list_set[2][1]
-            [2, 5, 7], list_set[0][1], list_set[1][1], list_set[2][1]
-            [3, 5, 7], list_set[0][2], list_set[1][1], list_set[2][1]
-
-            [1, 4, 8], list_set[0][0], list_set[1][0], list_set[2][2]
-            [2, 4, 8], list_set[0][1], list_set[1][0], list_set[2][2]
-            [3, 4, 8], list_set[0][2], list_set[1][0], list_set[2][2]
-
-            [1, 5, 8], list_set[0][0], list_set[1][1], list_set[2][2]
-            [2, 5, 8], list_set[0][1], list_set[1][1], list_set[2][2]
-            [3, 5, 8]] list_set[0][2], list_set[1][1], list_set[2][2]
+            gen_comb_list([[1, 2, 3], [4, 5], [6, 7, 8]]) returns [[1, 4, 6], [2, 4, 6], [3, 4, 6], [1, 5, 6], [2, 5, 6], [3, 5, 6], [1, 4, 7], [2, 4, 7], [3, 4, 7], [1, 5, 7], [2, 5, 7], [3, 5, 7], [1, 4, 8], [2, 4, 8], [3, 4, 8], [1, 5, 8], [2, 5, 8], [3, 5, 8]]
     '''
 
     if len(list_set) == 1:
@@ -60,5 +27,7 @@ def gen_comb_list(list_set):
             temp_item.append(val)
             start_list.append(temp_item)
     return start_list
+
+
 
 
