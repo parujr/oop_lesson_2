@@ -102,6 +102,17 @@ class Table:
     def __str__(self):
         return self.table_name + ':' + str(self.table)
 
+    def pivot_table(self, keys_to_pivot_list, keys_to_aggreagte_list, aggregate_func_list):
+        unique_values_list = []
+        key = {"gender": ['M', 'F'], "embarked": ['Southampton', 'Cherbourg', 'Queenstown'], "class": ['3', '2', '1']}
+        for i in keys_to_pivot_list:
+            unique_values_list.append(key[i])
+
+        import combination_gen
+        combination = combination_gen.gen_comb_list(unique_values_list)
+        print(combination)
+
+
 
 table1 = Table('cities', cities)
 table2 = Table('countries', countries)
@@ -116,6 +127,7 @@ my_DB.insert(table4)
 my_DB.insert(table5)
 my_table1 = my_DB.search('cities')
 my_table3 = my_DB.search("player")
+my_table5 = my_DB.search('titanic')
 
 print()
 
